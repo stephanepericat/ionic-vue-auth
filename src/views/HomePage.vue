@@ -69,13 +69,15 @@ export default defineComponent({
       isAuthenticated,
       user,
       login: async () => {
-        loginWithRedirect();
-        // const url = await buildAuthorizeUrl();
-        // console.log('url', url);
-        // await Browser.open({ url, windowName: '_self' });
+        // loginWithRedirect();
+        const url = await buildAuthorizeUrl();
+        console.log('login url', url);
+        await Browser.open({ url });
       },
       logout: async () => {
-        await Browser.open({ url: buildLogoutUrl({ returnTo: logoutUri }) });
+        const url = buildLogoutUrl({ returnTo: logoutUri });
+        console.log('logout url', url);
+        await Browser.open({ url });
         logout({ localOnly: true });
       },
     };
