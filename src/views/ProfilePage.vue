@@ -14,7 +14,10 @@
       </ion-header>
     
       <div id="container">
-        <p>Profile Page</p>
+        <template v-if="user">
+          <Img :src="user.picture" />
+          <h2>Welcome, {{ user.nickname }} ({{ user.email }})!</h2>
+        </template>
         <RouterLink to="/home">Go Home</RouterLink>
       </div>
     </ion-content>
