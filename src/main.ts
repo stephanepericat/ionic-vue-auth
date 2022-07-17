@@ -29,8 +29,6 @@ import './theme/variables.css';
 const app = createApp(App);
 const { VUE_APP_AUTH0_CLIENT_ID, VUE_APP_AUTH0_DOMAIN, VUE_APP_PACKAGE_ID } = process.env;
 const redirect_uri = createRedirectUri(VUE_APP_PACKAGE_ID, VUE_APP_AUTH0_DOMAIN);
-
-console.log("redirect_uri", redirect_uri);
 // co.shortwavaudio.authdemo://dev-rv69fnfh.us.auth0.com/capacitor/co.shortwavaudio.authdemo/callback
 
 app
@@ -38,7 +36,6 @@ app
     createAuth0({
       domain: VUE_APP_AUTH0_DOMAIN,
       client_id: VUE_APP_AUTH0_CLIENT_ID,
-      // redirect_uri: window.location.origin
       redirect_uri,
     })
   )

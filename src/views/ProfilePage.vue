@@ -39,10 +39,9 @@ export default defineComponent({
     IonToolbar
   },
   setup() {
-    const { isAuthenticated, user } = useAuth0();
+    const { user } = useAuth0();
 
     return {
-      isAuthenticated,
       user,
     };
   },

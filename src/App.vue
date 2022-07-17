@@ -21,13 +21,10 @@ export default defineComponent({
     const { handleRedirectCallback } = useAuth0();
 
     CapApp.addListener('appUrlOpen', async ({ url }) => {
-      console.log("appUrlOpen", url);
       if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
-        console.log("handling callback...");
         await handleRedirectCallback(url);
       }
-      // No-op on Android
-      console.log("closing browser....");
+
       await Browser.close();
     });
   }

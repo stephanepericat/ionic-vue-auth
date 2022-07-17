@@ -31,7 +31,6 @@
 
 <script lang="ts">
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-// import { App as CapApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { defineComponent } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
@@ -49,33 +48,19 @@ export default defineComponent({
     IonToolbar
   },
   setup() {
-    const { buildAuthorizeUrl, buildLogoutUrl, /* handleRedirectCallback, */ isAuthenticated, /* loginWithRedirect, */ logout, user } = useAuth0();
+    const { buildAuthorizeUrl, buildLogoutUrl, isAuthenticated, logout, user } = useAuth0();
     const { VUE_APP_AUTH0_DOMAIN, VUE_APP_PACKAGE_ID } = process.env;
     const logoutUri = createRedirectUri(VUE_APP_PACKAGE_ID, VUE_APP_AUTH0_DOMAIN);
-
-    // CapApp.addListener('appUrlOpen', async ({ url }) => {
-    //   console.log("appUrlOpen", url);
-    //   if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
-    //     console.log("handling callback...");
-    //     await handleRedirectCallback(url);
-    //   }
-    //   // No-op on Android
-    //   console.log("closing browser....");
-    //   await Browser.close();
-    // });
 
     return {
       isAuthenticated,
       user,
       login: async () => {
-        // loginWithRedirect();
         const url = await buildAuthorizeUrl();
-        console.log('login url', url);
         await Browser.open({ url });
       },
       logout: async () => {
         const url = buildLogoutUrl({ returnTo: logoutUri });
-        console.log('logout url', url);
         await Browser.open({ url });
         logout({ localOnly: true });
       },
