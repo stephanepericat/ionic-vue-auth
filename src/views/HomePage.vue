@@ -14,26 +14,47 @@
       </ion-header>
     
       <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+        <!-- <strong>Ready to create an app?</strong>
+        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p> -->
+        <template v-if="isAuthenticated">
+          <p>Welcome. {{ user.name }}!</p>
+          <IonButton @click="logout">Log Out</IonButton>
+        </template>
+        <IonButton v-else @click="login">Log In</IonButton>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
+import { useAuth0 } from '@auth0/auth0-vue';
 
 export default defineComponent({
   name: 'HomePage',
   components: {
+    IonButton,
     IonContent,
     IonHeader,
     IonPage,
     IonTitle,
     IonToolbar
-  }
+  },
+  setup() {
+    const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+
+    return {
+      isAuthenticated,
+      user,
+      login: () => {
+        loginWithRedirect();
+      },
+      logout: () => {
+        logout({ returnTo: window.location.origin });
+      },
+    };
+  },
 });
 </script>
 
