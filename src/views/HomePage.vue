@@ -2,14 +2,14 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Blank</ion-title>
+        <ion-title>Home</ion-title>
       </ion-toolbar>
     </ion-header>
     
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
+          <ion-title size="large">Home</ion-title>
         </ion-toolbar>
       </ion-header>
     
@@ -31,6 +31,8 @@
 
 <script lang="ts">
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { App as CapApp } from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
 import { defineComponent } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
@@ -45,13 +47,25 @@ export default defineComponent({
     IonToolbar
   },
   setup() {
-    const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+    const { buildAuthorizeUrl, handleRedirectCallback, isAuthenticated /*, loginWithRedirect */, logout, user } = useAuth0();
+
+    CapApp.addListener('appUrlOpen', async ({ url }) => {
+      console.log("appUrlOpen", url);
+      // if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
+      //   await handleRedirectCallback(url);
+      // }
+      // // No-op on Android
+      // await Browser.close();
+    });
 
     return {
       isAuthenticated,
       user,
-      login: () => {
-        loginWithRedirect();
+      login: async () => {
+        // loginWithRedirect();
+        const url = await buildAuthorizeUrl();
+        // console.log('url', url);
+        await Browser.open({ url, windowName: '_self' });
       },
       logout: () => {
         logout({ returnTo: window.location.origin });

@@ -32,12 +32,12 @@ import ProfilePage from '../views/ProfilePage.vue';
 // export default router
 export default (app: App) : Router => {
   const routes: Array<RouteRecordRaw> = [
+    // {
+    //   path: '/',
+    //   redirect: '/home'
+    // },
     {
       path: '/',
-      redirect: '/home'
-    },
-    {
-      path: '/home',
       name: 'Home',
       component: HomePage
     },
