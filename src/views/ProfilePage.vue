@@ -14,30 +14,21 @@
       </ion-header>
     
       <div id="container">
-        <!-- <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p> -->
-        <template v-if="isAuthenticated">
-          <p>Welcome. {{ user.name }}!</p>
-          <IonButton @click="logout">Log Out</IonButton><br/>
-          <RouterLink to="/profile">Go To Profile</RouterLink>
-        </template>
-        <template v-else>
-          <IonButton @click="login">Log In</IonButton>
-        </template>
+        <p>Profile Page</p>
+        <RouterLink to="/home">Go Home</RouterLink>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 export default defineComponent({
-  name: 'HomePage',
+  name: 'ProfilePage',
   components: {
-    IonButton,
     IonContent,
     IonHeader,
     IonPage,
@@ -45,17 +36,11 @@ export default defineComponent({
     IonToolbar
   },
   setup() {
-    const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+    const { isAuthenticated, user } = useAuth0();
 
     return {
       isAuthenticated,
       user,
-      login: () => {
-        loginWithRedirect();
-      },
-      logout: () => {
-        logout({ returnTo: window.location.origin });
-      },
     };
   },
 });

@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router';
+import setupRouter from './router';
 import { createAuth0 } from '@auth0/auth0-vue';
 
 import { IonicVue } from '@ionic/vue';
@@ -24,17 +24,24 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-const app = createApp(App)
+const app = createApp(App);
+const { VUE_APP_AUTH0_CLIENT_ID, VUE_APP_AUTH0_DOMAIN } = process.env;
+
+app
   .use(
     createAuth0({
-      domain: process.env.VUE_APP_AUTH0_DOMAIN,
-      client_id: process.env.VUE_APP_AUTH0_CLIENT_ID,
+      domain: VUE_APP_AUTH0_DOMAIN,
+      client_id: VUE_APP_AUTH0_CLIENT_ID,
       redirect_uri: window.location.origin
     })
   )
   .use(IonicVue)
-  .use(router);
-  
+
+
+  const router = setupRouter(app);
+
+  app.use(router);
+
 router.isReady().then(() => {
   app.mount('#app');
 });

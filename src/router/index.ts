@@ -1,22 +1,59 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
-import HomePage from '../views/HomePage.vue'
+import { RouteRecordRaw, Router } from 'vue-router';
+// import { createAuthGuard } from "@auth0/auth0-vue";
+import { App } from 'vue';
 
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: HomePage
-  }
-]
+import HomePage from '../views/HomePage.vue';
+import ProfilePage from '../views/ProfilePage.vue';
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+// const routes: Array<RouteRecordRaw> = [
+//   {
+//     path: '/',
+//     redirect: '/home'
+//   },
+//   {
+//     path: '/home',
+//     name: 'Home',
+//     component: HomePage
+//   },
+//   {
+//     path: '/profile',
+//     name: 'Profile',
+//     component: ProfilePage,
+//     beforeEnter: createAuthGuard(),
+//   }
+// ]
 
-export default router
+// const router = createRouter({
+//   history: createWebHistory(process.env.BASE_URL),
+//   routes
+// })
+
+// export default router
+export default (app: App) : Router => {
+  const routes: Array<RouteRecordRaw> = [
+    {
+      path: '/',
+      redirect: '/home'
+    },
+    {
+      path: '/home',
+      name: 'Home',
+      component: HomePage
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: ProfilePage,
+      // beforeEnter: createAuthGuard(app),
+      beforeEnter: (to, from, next) => {
+        next();
+      }
+    }
+  ]
+  
+  return createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes
+  })
+}
