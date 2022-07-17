@@ -30,11 +30,13 @@
 </template>
 
 <script lang="ts">
-import { isPlatform, IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import { App as CapApp } from '@capacitor/app';
+import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+// import { App as CapApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { defineComponent } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
+
+import { createRedirectUri } from "../utils/redirect-uri";
 
 export default defineComponent({
   name: 'HomePage',
@@ -47,23 +49,20 @@ export default defineComponent({
     IonToolbar
   },
   setup() {
-    const { buildAuthorizeUrl, buildLogoutUrl, handleRedirectCallback, isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
-    const isNative = isPlatform("ios") || isPlatform("android");
-    const { VUE_APP_AUTH0_CLIENT_ID, VUE_APP_AUTH0_DOMAIN, VUE_APP_PACKAGE_ID } = process.env;
-    const logoutUri = isNative
-  ? `${VUE_APP_PACKAGE_ID}://${VUE_APP_AUTH0_DOMAIN}/capacitor/${VUE_APP_PACKAGE_ID}/callback`
-  : window.location.origin;
+    const { buildAuthorizeUrl, buildLogoutUrl, /* handleRedirectCallback, */ isAuthenticated, /* loginWithRedirect, */ logout, user } = useAuth0();
+    const { VUE_APP_AUTH0_DOMAIN, VUE_APP_PACKAGE_ID } = process.env;
+    const logoutUri = createRedirectUri(VUE_APP_PACKAGE_ID, VUE_APP_AUTH0_DOMAIN);
 
-    CapApp.addListener('appUrlOpen', async ({ url }) => {
-      console.log("appUrlOpen", url);
-      if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
-        console.log("handling callback...");
-        await handleRedirectCallback(url);
-      }
-      // No-op on Android
-      console.log("closing browser....");
-      await Browser.close();
-    });
+    // CapApp.addListener('appUrlOpen', async ({ url }) => {
+    //   console.log("appUrlOpen", url);
+    //   if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
+    //     console.log("handling callback...");
+    //     await handleRedirectCallback(url);
+    //   }
+    //   // No-op on Android
+    //   console.log("closing browser....");
+    //   await Browser.close();
+    // });
 
     return {
       isAuthenticated,
