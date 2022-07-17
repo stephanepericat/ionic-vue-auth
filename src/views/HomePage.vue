@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { isPlatform, IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import { App as CapApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { defineComponent } from 'vue';
@@ -47,7 +47,12 @@ export default defineComponent({
     IonToolbar
   },
   setup() {
-    const { buildAuthorizeUrl, handleRedirectCallback, isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+    const { buildAuthorizeUrl, buildLogoutUrl, handleRedirectCallback, isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+    const isNative = isPlatform("ios") || isPlatform("android");
+    const { VUE_APP_AUTH0_CLIENT_ID, VUE_APP_AUTH0_DOMAIN, VUE_APP_PACKAGE_ID } = process.env;
+    const logoutUri = isNative
+  ? `${VUE_APP_PACKAGE_ID}://${VUE_APP_AUTH0_DOMAIN}/capacitor/${VUE_APP_PACKAGE_ID}/callback`
+  : window.location.origin;
 
     CapApp.addListener('appUrlOpen', async ({ url }) => {
       console.log("appUrlOpen", url);
@@ -69,8 +74,9 @@ export default defineComponent({
         // console.log('url', url);
         // await Browser.open({ url, windowName: '_self' });
       },
-      logout: () => {
-        logout({ returnTo: window.location.origin });
+      logout: async () => {
+        await Browser.open({ url: buildLogoutUrl({ returnTo: logoutUri }) });
+        logout({ localOnly: true });
       },
     };
   },
