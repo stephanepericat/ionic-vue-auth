@@ -47,25 +47,27 @@ export default defineComponent({
     IonToolbar
   },
   setup() {
-    const { buildAuthorizeUrl, handleRedirectCallback, isAuthenticated /*, loginWithRedirect */, logout, user } = useAuth0();
+    const { buildAuthorizeUrl, handleRedirectCallback, isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
     CapApp.addListener('appUrlOpen', async ({ url }) => {
       console.log("appUrlOpen", url);
-      // if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
-      //   await handleRedirectCallback(url);
-      // }
-      // // No-op on Android
-      // await Browser.close();
+      if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
+        console.log("handling callback...");
+        await handleRedirectCallback(url);
+      }
+      // No-op on Android
+      console.log("closing browser....");
+      await Browser.close();
     });
 
     return {
       isAuthenticated,
       user,
       login: async () => {
-        // loginWithRedirect();
-        const url = await buildAuthorizeUrl();
+        loginWithRedirect();
+        // const url = await buildAuthorizeUrl();
         // console.log('url', url);
-        await Browser.open({ url, windowName: '_self' });
+        // await Browser.open({ url, windowName: '_self' });
       },
       logout: () => {
         logout({ returnTo: window.location.origin });
