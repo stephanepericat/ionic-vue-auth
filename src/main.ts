@@ -29,7 +29,6 @@ import './theme/variables.css';
 const app = createApp(App);
 const { VUE_APP_AUTH0_CLIENT_ID, VUE_APP_AUTH0_DOMAIN, VUE_APP_PACKAGE_ID } = process.env;
 const redirect_uri = createRedirectUri(VUE_APP_PACKAGE_ID, VUE_APP_AUTH0_DOMAIN);
-// co.shortwavaudio.authdemo://dev-rv69fnfh.us.auth0.com/capacitor/co.shortwavaudio.authdemo/callback
 
 app
   .use(
